@@ -10,8 +10,11 @@ import MapKit
 
 struct ContentView: View {
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
+    @State var startAddressString: String = "625 Cantrill Drive, Davis, CA 95618"
+    @State var destinationAddressString: String = "1 Shields Avenue, Davis, CA 95616"
     @State private var selectedResult: MKMapItem?
     @State private var route: MKRoute?
+    
     @State private var startingPoint = CLLocationCoordinate2D(
         latitude: 38.539554,
         longitude: -121.749565
@@ -23,28 +26,62 @@ struct ContentView: View {
     )
     
     var body: some View {
-        Map (position: $position, selection: $selectedResult) {
-            Marker("Start", coordinate: self.startingPoint)
-            Marker("End", coordinate: self.destinationCoordinates)
-            
-            if let route {
-                MapPolyline(route)
-                    .stroke(.blue, lineWidth: 5)
+        VStack {
+            HStack {
+                VStack {
+                    TextField("Start", text: $startAddressString)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(5)
+                    TextField("Destination", text: $destinationAddressString)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(5)
+                }
+                Button {
+                    startNavigation()
+                } label: {
+                    Text("Start Navigation").bold()
+                        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                }
+                .buttonStyle(.borderedProminent)
             }
-        }
-        .mapControls {
-            MapUserLocationButton()
-            MapPitchToggle()
-        }
-        .onChange(of: selectedResult){
-            getDirections()
-        }
-        .onAppear {
-            CLLocationManager().requestWhenInUseAuthorization()
-            self.selectedResult = MKMapItem(placemark: MKPlacemark(coordinate: self.destinationCoordinates))
+            .padding([.leading, .trailing])
+            
+            Spacer()
+            
+            Map (position: $position, selection: $selectedResult) {
+                Marker("Start", coordinate: self.startingPoint)
+                Marker("End", coordinate: self.destinationCoordinates)
+                
+                if let route {
+                    MapPolyline(route)
+                        .stroke(.blue, lineWidth: 5)
+                }
+            }
+            .mapControls {
+                MapUserLocationButton()
+                MapPitchToggle()
+            }
+            .onChange(of: selectedResult){
+                getDirections()
+            }
+            .onAppear {
+                CLLocationManager().requestWhenInUseAuthorization()
+                self.selectedResult = MKMapItem(placemark: MKPlacemark(coordinate: self.destinationCoordinates))
+            }
         }
     }
     
+    func startNavigation() {
+        Task {
+            let startPlacemarkArray = try? await CLGeocoder().geocodeAddressString(startAddressString)
+            let destinationPlacemarkArray = try? await CLGeocoder().geocodeAddressString(startAddressString)
+            startingPoint.latitude = (startPlacemarkArray?[0].location?.coordinate.latitude ??  0.0) as Double
+            startingPoint.longitude = (startPlacemarkArray?[0].location?.coordinate.longitude ?? 0.0) as Double
+            destinationCoordinates.latitude = (destinationPlacemarkArray?[0].location?.coordinate.latitude ?? 0.0) as Double
+            destinationCoordinates.longitude = (destinationPlacemarkArray?[0].location?.coordinate.longitude ?? 0.0) as Double
+            getDirections()
+        }
+    }
     
     func getDirections() {
         self.route = nil
@@ -57,7 +94,8 @@ struct ContentView: View {
 
         Task {
             let placesArray = try? await CLGeocoder().geocodeAddressString("1008 Lancer Dr, San Jose, CA 95129")
-            print(placesArray?[0].location as Any)
+            print("Latitude:", placesArray?[0].location?.coordinate.latitude as Any)
+            print("Longitude:", placesArray?[0].location?.coordinate.longitude as Any)
             let directions = MKDirections(request: request)
             let response = try? await directions.calculate()
             route = response?.routes.first
@@ -66,5 +104,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(startAddressString: "", destinationAddressString: "")
 }

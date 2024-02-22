@@ -11,7 +11,7 @@ import SwiftUI
 struct NavRhythmPrototypeApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(startAddressString: "", destinationAddressString: "")
         }
     }
 }
