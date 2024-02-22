@@ -12,8 +12,6 @@ struct ContentView: View {
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
     @State private var selectedResult: MKMapItem?
     @State private var route: MKRoute?
-    let locationManager = CLLocationManager()
-    
     @State private var startingPoint = CLLocationCoordinate2D(
         latitude: 38.539554,
         longitude: -121.749565
@@ -58,6 +56,8 @@ struct ContentView: View {
         request.destination = self.selectedResult
 
         Task {
+            let placesArray = try? await CLGeocoder().geocodeAddressString("1008 Lancer Dr, San Jose, CA 95129")
+            print(placesArray?[0].location as Any)
             let directions = MKDirections(request: request)
             let response = try? await directions.calculate()
             route = response?.routes.first
