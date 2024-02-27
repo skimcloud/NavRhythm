@@ -111,6 +111,12 @@ struct ContentView: View {
             let response = try? await directions.calculate()
             route = response?.routes.first
             print(route?.polyline.coordinates ?? 0.0)
+            if let steps = route?.steps {
+                for eachStep in steps {
+                    print(eachStep.instructions, eachStep.distance, eachStep.transportType, eachStep.notice ?? 0.0)
+                }
+            }
+
         }
     }
 }
