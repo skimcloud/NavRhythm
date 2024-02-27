@@ -145,7 +145,7 @@ struct ContentView: View {
         
         // This function needs to be called every 1 second or so for active feedback to user
         
-        // check if our current route coordinate (using the global routeCoordinate index) is past the next maneuver coordinate within the route coordinate array, if it is we passed it, so update the maneuve
+        // Check if our current route coordinate (using the global routeCoordinate index) is past the next maneuver coordinate within the route coordinate array, if it is, so update the maneuverCoordinate index
         
     }
     
