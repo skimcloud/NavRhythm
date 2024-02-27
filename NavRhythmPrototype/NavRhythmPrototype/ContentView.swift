@@ -29,6 +29,7 @@ struct ContentView: View {
     @State private var routeCoordinates: [CLLocationCoordinate2D] = [] // GLOBAL ROUTE POLYLINE COORDINATES ARRAY
     @State private var maneuverCoordinateIndex: Int = 0
     @State private var routeCoordinateIndex: Int = 0
+    @State private var userCoordinates: CLLocationCoordinate2D
     
     
     
@@ -133,8 +134,12 @@ struct ContentView: View {
                     print(eachStep.distance)
                 }
             }
-
         }
+    }
+    
+    func getUserLocation() -> CLLocationCoordinate2D {
+        self.userCoordinates = (position.rect?.origin.coordinate)!
+        return userCoordinates
     }
     
     
