@@ -113,7 +113,7 @@ struct ContentView: View {
             print(route?.polyline.coordinates ?? 0.0)
             if let steps = route?.steps {
                 for eachStep in steps {
-                    print(eachStep.instructions, eachStep.distance, eachStep.transportType, eachStep.notice ?? 0.0)
+                    print(eachStep.polyline.coordinate)
                 }
             }
 
