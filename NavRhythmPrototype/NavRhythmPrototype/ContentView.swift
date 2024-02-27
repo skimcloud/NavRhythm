@@ -112,7 +112,7 @@ struct ContentView: View {
             route = response?.routes.first
             print(route?.polyline.coordinates ?? 0.0)
             
-            // TODO: have a global maneuver only coordinate array
+            // TODO: have a global maneuver only coordinate array (eachStep.polyline.coordinate)
             // TODO: global variable to indicate which maneuver (index to global maneuver array)
             // TODO: global ALL step coordinate array for drawRouteFromNextStepCoordinate()
                 // use route.coordinates (class extended above to support this)
@@ -128,13 +128,19 @@ struct ContentView: View {
         }
     }
     
-    func getDistanceToManeuver() { // TODO: calculate distance to next route
+    func getDistanceToManeuver() { // TODO: calculate distance to next maneuver
+        
+        // compare current user coordinates with maneuver coordinates stored in our global manever only coordinate array create above in line 115
         
     }
+    
+    // Based on the output of getDistanceToManeuver(), we will increase the vibration frequency and strength
     
     func drawRouteFromNextStepCoordinate() { // TODO: once a route coordinate is passed delete it so that the poly line is redrawn
         
         // Compare current user coordinates with first coordinates in array, if it's at a certain threshold above or below it, delete it
+        
+        // Polyline will be automatically redrawn (hopefully)
         
     }
 }
