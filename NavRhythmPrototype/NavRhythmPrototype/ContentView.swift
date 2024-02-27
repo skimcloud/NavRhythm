@@ -8,10 +8,21 @@
 import SwiftUI
 import MapKit
 
+public extension MKMultiPoint {
+    var coordinates: [CLLocationCoordinate2D] {
+        var coords = [CLLocationCoordinate2D](repeating: kCLLocationCoordinate2DInvalid,
+                                              count: pointCount)
+
+        getCoordinates(&coords, range: NSRange(location: 0, length: pointCount))
+
+        return coords
+    }
+}
+
 struct ContentView: View {
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
-    @State var startAddressString: String = "625 Cantrill Drive, Davis, CA 95618"
-    @State var destinationAddressString: String = "1 Shields Avenue, Davis, CA 95616"
+    @State var startAddressString: String = ""
+    @State var destinationAddressString: String = ""
     @State private var selectedResult: MKMapItem?
     @State private var route: MKRoute?
     
@@ -20,7 +31,7 @@ struct ContentView: View {
         longitude: -121.749565
     )
     
-    @State private var destinationCoordinates = CLLocationCoordinate2D(
+    @State private var destinationPoint = CLLocationCoordinate2D(
         latitude: 38.54968227765121,
         longitude: -121.72088700348498
     )
@@ -50,7 +61,7 @@ struct ContentView: View {
             
             Map (position: $position, selection: $selectedResult) {
                 Marker("Start", coordinate: self.startingPoint)
-                Marker("End", coordinate: self.destinationCoordinates)
+                Marker("End", coordinate: self.destinationPoint)
                 
                 if let route {
                     MapPolyline(route)
@@ -66,7 +77,7 @@ struct ContentView: View {
             }
             .onAppear {
                 CLLocationManager().requestWhenInUseAuthorization()
-                self.selectedResult = MKMapItem(placemark: MKPlacemark(coordinate: self.destinationCoordinates))
+                self.selectedResult = MKMapItem(placemark: MKPlacemark(coordinate: self.destinationPoint))
             }
         }
     }
@@ -74,11 +85,11 @@ struct ContentView: View {
     func startNavigation() {
         Task {
             let startPlacemarkArray = try? await CLGeocoder().geocodeAddressString(startAddressString)
-            let destinationPlacemarkArray = try? await CLGeocoder().geocodeAddressString(startAddressString)
-            startingPoint.latitude = (startPlacemarkArray?[0].location?.coordinate.latitude ??  0.0) as Double
-            startingPoint.longitude = (startPlacemarkArray?[0].location?.coordinate.longitude ?? 0.0) as Double
-            destinationCoordinates.latitude = (destinationPlacemarkArray?[0].location?.coordinate.latitude ?? 0.0) as Double
-            destinationCoordinates.longitude = (destinationPlacemarkArray?[0].location?.coordinate.longitude ?? 0.0) as Double
+            let destinationPlacemarkArray = try? await CLGeocoder().geocodeAddressString(destinationAddressString)
+            self.startingPoint.latitude = (startPlacemarkArray?[0].location?.coordinate.latitude ??  0.0) as Double
+            self.startingPoint.longitude = (startPlacemarkArray?[0].location?.coordinate.longitude ?? 0.0) as Double
+            self.destinationPoint.latitude = (destinationPlacemarkArray?[0].location?.coordinate.latitude ?? 0.0) as Double
+            self.destinationPoint.longitude = (destinationPlacemarkArray?[0].location?.coordinate.longitude ?? 0.0) as Double
             getDirections()
         }
     }
@@ -99,6 +110,7 @@ struct ContentView: View {
             let directions = MKDirections(request: request)
             let response = try? await directions.calculate()
             route = response?.routes.first
+            print(route?.polyline.coordinates ?? 0.0)
         }
     }
 }
