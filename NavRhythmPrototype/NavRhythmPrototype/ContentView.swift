@@ -25,8 +25,8 @@ struct ContentView: View {
     @State var destinationAddressString: String = ""
     @State private var selectedResult: MKMapItem?
     @State private var route: MKRoute?
-    @State private var maneuverCoordinates: [CLLocationCoordinate2D] = []
-    @State private var routeCoordinates: [CLLocationCoordinate2D] = []
+    @State private var maneuverCoordinates: [CLLocationCoordinate2D] = [] // GLOBAL MANEUVER COORDINATES ARRAY
+    @State private var routeCoordinates: [CLLocationCoordinate2D] = [] // GLOBAL ROUTE POLYLINE COORDINATES ARRAY
     @State private var maneuverCoordinateIndex: Int = 0
     @State private var routeCoordinateIndex: Int = 0
     
@@ -124,10 +124,10 @@ struct ContentView: View {
                 // use route.coordinates (class extended above to support this)
             // TODO: global variable to indicate which route (index to global routeCoordinates array) DONE
             
-            routeCoordinates = route!.polyline.coordinates
+            routeCoordinates = route!.polyline.coordinates // GLOBAL ROUTE POLYLINE COORDINATES ARRAY
             if let steps = route?.steps {
                 for eachStep in steps {
-                    maneuverCoordinates.append(eachStep.polyline.coordinate)
+                    maneuverCoordinates.append(eachStep.polyline.coordinate) // GLOBAL MANEUVER COORDINATES ARRAY
                     print(eachStep.polyline.coordinate)
                     print(eachStep.instructions)
                     print(eachStep.distance)
@@ -159,3 +159,4 @@ struct ContentView: View {
 #Preview {
     ContentView(startAddressString: "", destinationAddressString: "")
 }
+
