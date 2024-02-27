@@ -111,13 +111,31 @@ struct ContentView: View {
             let response = try? await directions.calculate()
             route = response?.routes.first
             print(route?.polyline.coordinates ?? 0.0)
+            
+            // TODO: have a global maneuver only coordinate array
+            // TODO: global variable to indicate which maneuver (index to global maneuver array)
+            // TODO: global ALL step coordinate array for drawRouteFromNextStepCoordinate()
+                // use route.coordinates (class extended above to support this)
+            
             if let steps = route?.steps {
                 for eachStep in steps {
                     print(eachStep.polyline.coordinate)
+                    print(eachStep.instructions)
+                    print(eachStep.distance)
                 }
             }
 
         }
+    }
+    
+    func getDistanceToManeuver() { // TODO: calculate distance to next route
+        
+    }
+    
+    func drawRouteFromNextStepCoordinate() { // TODO: once a route coordinate is passed delete it so that the poly line is redrawn
+        
+        // Compare current user coordinates with first coordinates in array, if it's at a certain threshold above or below it, delete it
+        
     }
 }
 
