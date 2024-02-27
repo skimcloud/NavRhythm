@@ -25,6 +25,12 @@ struct ContentView: View {
     @State var destinationAddressString: String = ""
     @State private var selectedResult: MKMapItem?
     @State private var route: MKRoute?
+    @State private var maneuverCoordinates: [CLLocationCoordinate2D] = []
+    @State private var routeCoordinates: [CLLocationCoordinate2D] = []
+    @State private var maneuverCoordinateIndex: Int = 0
+    @State private var routeCoordinateIndex: Int = 0
+    
+    
     
     @State private var startingPoint = CLLocationCoordinate2D(
         latitude: 38.539554,
@@ -112,13 +118,16 @@ struct ContentView: View {
             route = response?.routes.first
             print(route?.polyline.coordinates ?? 0.0)
             
-            // TODO: have a global maneuver only coordinate array (eachStep.polyline.coordinate)
-            // TODO: global variable to indicate which maneuver (index to global maneuver array)
-            // TODO: global ALL step coordinate array for drawRouteFromNextStepCoordinate()
+            // TODO: have a global maneuver only coordinate array (eachStep.polyline.coordinate) DONE
+            // TODO: global variable to indicate which maneuver (index to global maneuverCoordinates array) DONE
+            // TODO: global ALL step coordinate array for drawRouteFromNextStepCoordinate() DONE
                 // use route.coordinates (class extended above to support this)
+            // TODO: global variable to indicate which route (index to global routeCoordinates array) DONE
             
+            routeCoordinates = route!.polyline.coordinates
             if let steps = route?.steps {
                 for eachStep in steps {
+                    maneuverCoordinates.append(eachStep.polyline.coordinate)
                     print(eachStep.polyline.coordinate)
                     print(eachStep.instructions)
                     print(eachStep.distance)
@@ -136,9 +145,11 @@ struct ContentView: View {
     
     // Based on the output of getDistanceToManeuver(), we will increase the vibration frequency and strength
     
-    func drawRouteFromNextStepCoordinate() { // TODO: once a route coordinate is passed delete it so that the poly line is redrawn
+    func updateRouteCoordinateIndex() { // TODO: once a route coordinate is passed update RouteCoordinateIndex so that the poly line is redrawn
         
-        // Compare current user coordinates with first coordinates in array, if it's at a certain threshold above or below it, delete it
+        // Compare current user coordinates with the current route coordinates, if it's at a certain threshold above or below it, increase index
+        
+        // this function needs to be called every 2 seconds or so...
         
         // Polyline will be automatically redrawn (hopefully)
         
