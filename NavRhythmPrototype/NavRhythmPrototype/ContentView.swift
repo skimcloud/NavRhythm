@@ -137,21 +137,25 @@ struct ContentView: View {
         }
     }
     
+    
+    // Based on the output of getDistanceToManeuver(), we will increase the vibration frequency and strength
     func getDistanceToManeuver() { // TODO: calculate distance to next maneuver
         
-        // compare current user coordinates with maneuver coordinates stored in our global manever only coordinate array create above in line 115
+        // Compare current route coordinate with maneuver coordinates stored in our global manever only coordinate array, based on the distance increase vibrationFrequency variable (not made yet)
+        
+        // This function needs to be called every 1 second or so for active feedback to user
+        
+        // check if our current route coordinate (using the global routeCoordinate index) is past the next maneuver coordinate within the route coordinate array, if it is we passed it, so update the maneuve
         
     }
     
-    // Based on the output of getDistanceToManeuver(), we will increase the vibration frequency and strength
-    
     func updateRouteCoordinateIndex() { // TODO: once a route coordinate is passed update RouteCoordinateIndex so that the poly line is redrawn
         
-        // Compare current user coordinates with the current route coordinates, if it's at a certain threshold above or below it, increase index
+        // Compare current user coordinates with the current route coordinates, if it's at a certain threshold above or below it, increase RouteCoordinateIndex
         
-        // this function needs to be called every 2 seconds or so...
+        // This function needs to be called every 2 seconds or so for active feedback to user
         
-        // Polyline will be automatically redrawn (hopefully)
+        // Polyline will be automatically redrawn with SwiftUI's state management :)
         
     }
 }
