@@ -8,6 +8,7 @@
 import SwiftUI
 import MapKit
 
+
 public extension MKMultiPoint {
     var coordinates: [CLLocationCoordinate2D] {
         var coords = [CLLocationCoordinate2D](repeating: kCLLocationCoordinate2DInvalid,
@@ -29,7 +30,8 @@ struct ContentView: View {
     @State private var routeCoordinates: [CLLocationCoordinate2D] = [] // GLOBAL ROUTE POLYLINE COORDINATES ARRAY
     @State private var maneuverCoordinateIndex: Int = 0
     @State private var routeCoordinateIndex: Int = 0
-    @State private var userCoordinates: CLLocationCoordinate2D
+    @State private var userCoordinates: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    @State private var searchResults: [MKLocalSearchCompletion] = []
     
     
     
@@ -45,24 +47,28 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            HStack {
-                VStack {
-                    TextField("Start", text: $startAddressString)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(5)
-                    TextField("Destination", text: $destinationAddressString)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(5)
+            VStack{
+                HStack {
+                    VStack {
+
+        
+                        SearchBarView(startInput: $startAddressString, destinationInput: $destinationAddressString, searchPopulatedResults: $searchResults)
+                        
+                    }
+
                 }
+                .padding([.leading, .trailing])
+                
+
                 Button {
                     startNavigation()
                 } label: {
                     Text("Start Navigation").bold()
-                        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                        .frame(width: UIScreen.main.bounds.width * 0.5)
                 }
                 .buttonStyle(.borderedProminent)
             }
-            .padding([.leading, .trailing])
+
             
             Spacer()
             
@@ -104,7 +110,7 @@ struct ContentView: View {
     func getDirections() {
         self.route = nil
         
-        guard let selectedResult else { return }
+       // guard let selectedResult else { return }
         
         let request = MKDirections.Request()
         request.source = MKMapItem(placemark: MKPlacemark(coordinate: self.startingPoint))
@@ -168,4 +174,7 @@ struct ContentView: View {
 #Preview {
     ContentView(startAddressString: "", destinationAddressString: "")
 }
+
+
+
 
