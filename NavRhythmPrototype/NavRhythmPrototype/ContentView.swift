@@ -25,6 +25,7 @@ struct ContentView: View {
     @State var startAddressString: String = ""
     @State var destinationAddressString: String = ""
     @State private var selectedResult: MKMapItem?
+    @State private var flag = false
     @State private var route: MKRoute?
     @State private var maneuverCoordinates: [CLLocationCoordinate2D] = [] // GLOBAL MANEUVER COORDINATES ARRAY
     @State private var routeCoordinates: [CLLocationCoordinate2D] = [] // GLOBAL ROUTE POLYLINE COORDINATES ARRAY
@@ -51,22 +52,27 @@ struct ContentView: View {
                 HStack {
                     VStack {
 
-        
-                        SearchBarView(startInput: $startAddressString, destinationInput: $destinationAddressString, searchPopulatedResults: $searchResults)
-                        
+                        if  !flag {
+                            SearchBarView(startInput: $startAddressString, destinationInput: $destinationAddressString, searchPopulatedResults: $searchResults)
+                        }
+
+                
                     }
 
                 }
                 .padding([.leading, .trailing])
-                
-
-                Button {
-                    startNavigation()
-                } label: {
-                    Text("Start Navigation").bold()
-                        .frame(width: UIScreen.main.bounds.width * 0.5)
+                if !flag { // removes search view and begins navigation view
+                    Button {
+                        flag = true
+                        startNavigation()
+                    } label: {
+                        Text("Start Navigation").bold()
+                            .frame(width: UIScreen.main.bounds.width * 0.5)
+                    }
+                    .buttonStyle(.borderedProminent) // disables the button until all inputs are populated
+                    .disabled(startAddressString.isEmpty || destinationAddressString.isEmpty)
                 }
-                .buttonStyle(.borderedProminent)
+          
             }
 
             

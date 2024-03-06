@@ -10,6 +10,8 @@ import MapKit
 
 // need to use class to use mapkit MKLocalSearchCompleter
 // error if i don't put NSObject
+
+
 class SearchPopulate: NSObject, MKLocalSearchCompleterDelegate { /// need MKLocalSearchCompleterDelegate to use the mapkit location database
     var searchResults: Binding<[MKLocalSearchCompletion]>
     init(searchResults: Binding<[MKLocalSearchCompletion]>) {
@@ -24,6 +26,8 @@ class SearchPopulate: NSObject, MKLocalSearchCompleterDelegate { /// need MKLoca
 }
 
 struct SearchBarView: View {
+    @State private var flag = false
+    @State private var flag2 = false
     @Binding var destinationInput: String
     @Binding var startInput : String
     @Binding var searchPopulatedResults: [MKLocalSearchCompletion] // saves locations
@@ -57,7 +61,7 @@ struct SearchBarView: View {
             .padding()
             .frame(maxWidth: .infinity)
             
-            if !destinationInput.isEmpty { // list the search bar for destination input
+            if !flag2 && !destinationInput.isEmpty { // list the search bar for destination input
                 // display results in a list
                 List(searchPopulatedResults, id: \.title) 
                 { result in // used as a loop 
@@ -66,17 +70,55 @@ struct SearchBarView: View {
                         Text(result.subtitle).font(.caption) // make smaller
                          .foregroundColor(.gray) // font color
                     }
+                    .onTapGesture {
+                        if let index = searchPopulatedResults.firstIndex(where: { $0.title == result.title }) {
+                            let pickTitle = searchPopulatedResults[index].title
+                            let pickSubtitle = searchPopulatedResults[index].subtitle
+                            let fullAddress = "\(pickTitle) \(pickSubtitle)"
+
+                            $destinationInput.wrappedValue = fullAddress
+                            flag2.toggle()
+                        }
+                    }
+                    .gesture(
+                            TapGesture()
+                                .onEnded { _ in
+                                    flag2 = false  // reset value
+                                }
+                        )
                 }
             }
-            if !startInput.isEmpty { // list the search bar for start input
+            if  !flag && !startInput.isEmpty {
                 List(searchPopulatedResults, id: \.title) { result in
                     VStack(alignment: .leading) {
                         Text(result.title)
-                        Text(result.subtitle).font(.caption)
+                        Text(result.subtitle)
+                            .font(.caption)
                             .foregroundColor(.gray)
                     }
+                    .onTapGesture {
+       
+                        if let index = searchPopulatedResults.firstIndex(where: { $0.title == result.title }) {
+                         
+                            let pickTitle = searchPopulatedResults[index].title
+                            let pickSubtitle = searchPopulatedResults[index].subtitle
+                            let fullAddress = "\(pickTitle) \(pickSubtitle)"
+                            
+                            $startInput.wrappedValue = fullAddress
+                            flag.toggle()
+                            
+                        }
+                       
+                    }
+                    .gesture(
+                            TapGesture()
+                                .onEnded { _ in
+                                    flag = false
+                                }
+                        )
                 }
             }
+           
         }
         .onAppear {
             searchPopulate.delegate = searchBarD
