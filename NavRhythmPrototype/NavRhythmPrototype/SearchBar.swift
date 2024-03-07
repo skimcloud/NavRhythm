@@ -123,12 +123,10 @@ struct SearchBarView: View {
         .onAppear {
             searchPopulate.delegate = searchBarD
         }
-        // when  text input destination changes
-        .onChange(of: destinationInput) { _ in
+        .onChange(of: destinationInput) {
             searchPopulate.queryFragment = destinationInput
         }
-        // when  text input of  start changes
-        .onChange(of: startInput) { _ in
+        .onChange(of: startInput) {
             searchPopulate.queryFragment = startInput
         }
     }

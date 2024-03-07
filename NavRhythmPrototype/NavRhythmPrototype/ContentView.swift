@@ -51,11 +51,9 @@ struct ContentView: View {
             VStack{
                 HStack {
                     VStack {
-
                         if  !flag {
                             SearchBarView(startInput: $startAddressString, destinationInput: $destinationAddressString, searchPopulatedResults: $searchResults)
                         }
-
                 
                     }
 
@@ -138,6 +136,15 @@ struct ContentView: View {
             // TODO: global variable to indicate which route (index to global routeCoordinates array) DONE
             
             routeCoordinates = route!.polyline.coordinates // GLOBAL ROUTE POLYLINE COORDINATES ARRAY
+            
+            
+            var count = 0
+            for c in routeCoordinates {
+                print("Route Coordinate \(count): \(c)")
+                count += 1
+            }
+            
+            
             if let steps = route?.steps {
                 for eachStep in steps {
                     maneuverCoordinates.append(eachStep.polyline.coordinate) // GLOBAL MANEUVER COORDINATES ARRAY
@@ -157,23 +164,19 @@ struct ContentView: View {
     
     // Based on the output of getDistanceToManeuver(), we will increase the vibration frequency and strength
     func getDistanceToManeuver() { // TODO: calculate distance to next maneuver
-        
-        // Compare current route coordinate with maneuver coordinates stored in our global manever only coordinate array, based on the distance increase vibrationFrequency variable (not made yet)
-        
-        // This function needs to be called every 1 second or so for active feedback to user
-        
-        // Check if our current route coordinate (using the global routeCoordinate index) is past the next maneuver coordinate within the route coordinate array, if it is, so update the maneuverCoordinate index
-        
-    }
-    
-    func updateRouteCoordinateIndex() { // TODO: once a route coordinate is passed update RouteCoordinateIndex so that the poly line is redrawn
-        
-        // Compare current user coordinates with the current route coordinates, if it's at a certain threshold above or below it, increase RouteCoordinateIndex
-        
-        // This function needs to be called every 2 seconds or so for active feedback to user
-        
-        // Polyline will be automatically redrawn with SwiftUI's state management :)
-        
+        /*
+        getDistanceToManeuver()
+
+        In order to calculate distance from current maneuver, find out which coordinate along the route we are on, and then calculate distance for all points leading up to the maneuver coordinate to see our distance from it
+
+        -> Get user location
+        -> Loop through Route coordinates and check which value is closest to it
+        -> From that closest coordinate we keep iterating through the route coordinates and sum up the distances from each point
+        -> Distance Text object shown in view to keep track
+         
+         Update route coordinate index to progress along the route
+         
+         */
     }
 }
 
