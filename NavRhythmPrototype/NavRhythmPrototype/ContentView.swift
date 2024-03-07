@@ -162,22 +162,67 @@ struct ContentView: View {
     }
     
     
-    // Based on the output of getDistanceToManeuver(), we will increase the vibration frequency and strength
+    /* Based on the output of getDistanceToManeuver(), we will increase the vibration frequency and strength
     func getDistanceToManeuver() { // TODO: calculate distance to next maneuver
-        /*
+        
         getDistanceToManeuver()
 
         In order to calculate distance from current maneuver, find out which coordinate along the route we are on, and then calculate distance for all points leading up to the maneuver coordinate to see our distance from it
 
         -> Get user location
+        -> Get maneuver Coordiantes from the global array with the maneuver index value
+        -> Find where that maneuver coordinate lies within the route coordinates array so that only sum up to that point
         -> Loop through Route coordinates and check which value is closest to it
-        -> From that closest coordinate we keep iterating through the route coordinates and sum up the distances from each point
+        -> From that closest coordinate we keep iterating through the route coordinates and sum up the distances from each point until we hit the maneuver coordiante
         -> Distance Text object shown in view to keep track
+     
+        -> Iterate maneuverCoordinateIndex
          
          Update route coordinate index to progress along the route
          
-         */
+         
+    }*/
+    
+    func getDistanceToManeuver() -> Double {
+        let userLocation = getUserLocation()
+        let userCLLocation = CLLocation(latitude: userLocation.latitude, longitude: userLocation.longitude)
+
+        // Ensure maneuverCoordinates index is valid
+        guard maneuverCoordinates.indices.contains(maneuverCoordinateIndex) else { return 0.0 }
+        let nextManeuverLocation = maneuverCoordinates[maneuverCoordinateIndex]
+
+        // This variable will hold the sum of distances from the user's closest route point up to the next maneuver.
+        var totalDistanceToManeuver: Double = 0.0
+
+        // Find the closest route coordinate to the user's location
+        var closestRoutePointIndex = 0
+        var minimumDistance = Double.greatestFiniteMagnitude
+        for (index, coordinate) in routeCoordinates.enumerated() {
+            let distance = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude).distance(from: userCLLocation)
+            if distance < minimumDistance {
+                minimumDistance = distance
+                closestRoutePointIndex = index
+            }
+        }
+
+        // Starting from the closest route point, sum the distances up to the maneuver coordinate.
+        for index in closestRoutePointIndex..<routeCoordinates.count {
+            if routeCoordinates[index].latitude == nextManeuverLocation.latitude &&  routeCoordinates[index].longitude == nextManeuverLocation.longitude {
+                // Once we reach the maneuver point, stop the calculation.
+                break
+            }
+            if index + 1 < routeCoordinates.count {
+                let startPoint = CLLocation(latitude: routeCoordinates[index].latitude, longitude: routeCoordinates[index].longitude)
+                let endPoint = CLLocation(latitude: routeCoordinates[index + 1].latitude, longitude: routeCoordinates[index + 1].longitude)
+                totalDistanceToManeuver += startPoint.distance(from: endPoint)
+            }
+        }
+
+        maneuverCoordinateIndex += 1
+        return totalDistanceToManeuver
     }
+
+
 }
 
 #Preview {
