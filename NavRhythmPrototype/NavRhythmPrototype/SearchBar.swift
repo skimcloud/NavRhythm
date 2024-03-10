@@ -43,49 +43,50 @@ struct SearchBarView: View {
     }
 
     var body: some View {
-        VStack {
+        ZStack { 
+            VStack {
             VStack {
                 TextField("Start", text: $startInput, onEditingChanged: { _ in
                     searchPopulate.queryFragment = startInput
                 })
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(5)
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(5)
                 
                 TextField("Destination", text: $destinationInput, onEditingChanged: { _ in
                     searchPopulate.queryFragment = destinationInput
                 })
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(5)
-
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(5)
+                
             }
             .padding()
             .frame(maxWidth: .infinity)
             
             if !flag2 && !destinationInput.isEmpty { // list the search bar for destination input
                 // display results in a list
-                List(searchPopulatedResults, id: \.title) 
-                { result in // used as a loop 
+                List(searchPopulatedResults, id: \.title)
+                { result in // used as a loop
                     VStack(alignment: .leading) { // fix format
                         Text(result.title)
                         Text(result.subtitle).font(.caption) // make smaller
-                         .foregroundColor(.gray) // font color
+                            .foregroundColor(.gray) // font color
                     }
                     .onTapGesture {
                         if let index = searchPopulatedResults.firstIndex(where: { $0.title == result.title }) {
                             let pickTitle = searchPopulatedResults[index].title
                             let pickSubtitle = searchPopulatedResults[index].subtitle
                             let fullAddress = "\(pickTitle) \(pickSubtitle)"
-
+                            
                             $destinationInput.wrappedValue = fullAddress
                             flag2.toggle()
                         }
                     }
                     .gesture(
-                            TapGesture()
-                                .onEnded { _ in
-                                    flag2 = false  // reset value
-                                }
-                        )
+                        TapGesture()
+                            .onEnded { _ in
+                                flag2 = false  // reset value
+                            }
+                    )
                 }
             }
             if  !flag && !startInput.isEmpty {
@@ -97,9 +98,9 @@ struct SearchBarView: View {
                             .foregroundColor(.gray)
                     }
                     .onTapGesture {
-       
+                        
                         if let index = searchPopulatedResults.firstIndex(where: { $0.title == result.title }) {
-                         
+                            
                             let pickTitle = searchPopulatedResults[index].title
                             let pickSubtitle = searchPopulatedResults[index].subtitle
                             let fullAddress = "\(pickTitle) \(pickSubtitle)"
@@ -108,17 +109,17 @@ struct SearchBarView: View {
                             flag.toggle()
                             
                         }
-                       
+                        
                     }
                     .gesture(
-                            TapGesture()
-                                .onEnded { _ in
-                                    flag = false
-                                }
-                        )
+                        TapGesture()
+                            .onEnded { _ in
+                                flag = false
+                            }
+                    )
                 }
             }
-           
+            
         }
         .onAppear {
             searchPopulate.delegate = searchBarD
@@ -128,6 +129,7 @@ struct SearchBarView: View {
         }
         .onChange(of: startInput) {
             searchPopulate.queryFragment = startInput
+        }
         }
     }
 }

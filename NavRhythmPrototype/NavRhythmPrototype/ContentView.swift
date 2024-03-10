@@ -47,54 +47,61 @@ struct ContentView: View {
     )
     
     var body: some View {
-        VStack {
-            VStack{
-                HStack {
-                    VStack {
-                        if  !flag {
-                            SearchBarView(startInput: $startAddressString, destinationInput: $destinationAddressString, searchPopulatedResults: $searchResults)
+        ZStack{
+            VStack {
+                VStack{
+                    HStack {
+                        VStack {
+                            if  !flag {
+                                SearchBarView(startInput: $startAddressString, destinationInput: $destinationAddressString, searchPopulatedResults: $searchResults)
+                            }
+                            
                         }
-                
+                       
+                        
                     }
-
-                }
-                .padding([.leading, .trailing])
-                if !flag { // removes search view and begins navigation view
-                    Button {
-                        flag = true
-                        startNavigation()
-                    } label: {
-                        Text("Start Navigation").bold()
-                            .frame(width: UIScreen.main.bounds.width * 0.5)
+                    .padding([.leading, .trailing])
+                 
+                    if !flag { // removes search view and begins navigation view
+                        Button {
+                            flag = true
+                            startNavigation()
+                        } label: {
+                            Text("Start Navigation").bold()
+                                .frame(width: UIScreen.main.bounds.width * 0.5)
+                        }
+                        .buttonStyle(.borderedProminent) // disables the button until all inputs are populated
+                        .disabled(startAddressString.isEmpty || destinationAddressString.isEmpty)
                     }
-                    .buttonStyle(.borderedProminent) // disables the button until all inputs are populated
-                    .disabled(startAddressString.isEmpty || destinationAddressString.isEmpty)
+                    
                 }
-          
-            }
-
-            
-            Spacer()
-            
-            Map (position: $position, selection: $selectedResult) {
-                Marker("Start", coordinate: self.startingPoint)
-                Marker("End", coordinate: self.destinationPoint)
                 
-                if let route {
-                    MapPolyline(route)
-                        .stroke(.blue, lineWidth: 5)
+                
+                Spacer()
+                ZStack{
+                    Map (position: $position, selection: $selectedResult) {
+                        Marker("Start", coordinate: self.startingPoint)
+                        Marker("End", coordinate: self.destinationPoint)
+                        
+                        if let route {
+                            MapPolyline(route)
+                                .stroke(.blue, lineWidth: 5)
+                        }
+                    }
+                    .mapControls {
+                        MapUserLocationButton()
+                        MapPitchToggle()
+                    }
+                    .onChange(of: selectedResult){
+                        getDirections()
+                    }
+                    .onAppear {
+                        CLLocationManager().requestWhenInUseAuthorization()
+                        self.selectedResult = MKMapItem(placemark: MKPlacemark(coordinate: self.destinationPoint))
+                    }
+                    
+                    VibrationView()
                 }
-            }
-            .mapControls {
-                MapUserLocationButton()
-                MapPitchToggle()
-            }
-            .onChange(of: selectedResult){
-                getDirections()
-            }
-            .onAppear {
-                CLLocationManager().requestWhenInUseAuthorization()
-                self.selectedResult = MKMapItem(placemark: MKPlacemark(coordinate: self.destinationPoint))
             }
         }
     }

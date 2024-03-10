@@ -9,9 +9,25 @@ import SwiftUI
 
 @main
 struct NavRhythmPrototypeApp: App {
+    @State private var showPopUp = true
+    
     var body: some Scene {
         WindowGroup {
-            ContentView(startAddressString: "", destinationAddressString: "")
+            ZStack {
+                ContentView(startAddressString: "", destinationAddressString: "")
+                
+                if showPopUp {
+                    PopUpIcon()
+            
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // makes it disappear after 2 secs 
+                                    showPopUp = false
+                                
+                            }
+                        }
+                }
+            }
         }
     }
 }
+
