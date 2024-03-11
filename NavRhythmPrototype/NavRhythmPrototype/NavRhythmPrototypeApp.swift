@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct NavRhythmPrototypeApp: App {
+    @StateObject var navigationAndHapticModel = NavigationAndHapticModel(navigationService: NavigationService(), hapticFeedbackService: HapticFeedbackService(), startAddressString: "", destinationAddressString: "", isNavigating: false)
+    
     var body: some Scene {
         WindowGroup {
-            ContentView(startAddressString: "", destinationAddressString: "")
+            ContentView()
+                .environmentObject(navigationAndHapticModel)
         }
     }
 }
