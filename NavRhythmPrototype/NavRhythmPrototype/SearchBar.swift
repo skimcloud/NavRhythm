@@ -8,9 +8,6 @@
 import SwiftUI
 import MapKit
 
-// need to use class to use mapkit MKLocalSearchCompleter
-// error if i don't put NSObject
-
 
 class SearchPopulate: NSObject, MKLocalSearchCompleterDelegate { /// need MKLocalSearchCompleterDelegate to use the mapkit location database
     var searchResults: Binding<[MKLocalSearchCompletion]>
@@ -43,7 +40,7 @@ struct SearchBarView: View {
     }
 
     var body: some View {
-        ZStack { 
+        ZStack {
             VStack {
             VStack {
                 TextField("Start", text: $startInput, onEditingChanged: { _ in
