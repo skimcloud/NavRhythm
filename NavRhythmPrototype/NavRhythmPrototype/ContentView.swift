@@ -16,16 +16,26 @@ struct ContentView: View {
                     VStack {
                         if !navigationAndHapticModel.isNavigating {
                             SearchBarView(
-                                startInput: $navigationAndHapticModel.startAddressString,
+                                
                                 destinationInput: $navigationAndHapticModel.destinationAddressString,
                                 searchPopulatedResults: $searchResults
                             )
+                          
                         }
+                      
+
                     }
                 }
                 .padding([.leading, .trailing])
-                if !navigationAndHapticModel.isNavigating {
+                
+
+                
+                if !navigationAndHapticModel.isNavigating  {
                     Button {
+                        if let userLocation = locationManager.location {
+                            navigationAndHapticModel.startAddressString = "\(userLocation.coordinate.latitude), \(userLocation.coordinate.longitude)"
+                        }
+                        
                         navigationAndHapticModel.isNavigating = true
                         Task {
                             try? await navigationAndHapticModel.getRouteInformation()
@@ -35,7 +45,8 @@ struct ContentView: View {
                             .frame(width: UIScreen.main.bounds.width * 0.5)
                     }
                     .buttonStyle(.borderedProminent)
-                    .disabled(navigationAndHapticModel.startAddressString.isEmpty || navigationAndHapticModel.destinationAddressString.isEmpty)
+                    .disabled(navigationAndHapticModel.destinationAddressString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+
                     Spacer().frame(height: 10) 
                 }
             }
