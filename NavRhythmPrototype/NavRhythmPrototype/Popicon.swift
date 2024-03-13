@@ -10,20 +10,38 @@ import SwiftUI
 
 struct PopUpIcon: View {
     var body: some View {
-        ZStack {
-            Image("Icon")
 
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            Text("Welcome to NavRhythm!")
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundColor(.white)
+        ZStack {
+            
+            Color.white
+
+            VStack() {
+               
                 
-                .padding()
+                Image("Icon")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 200, height: 200)
+                    .padding()
+                
+                Spacer().frame(height: 1)
+                
+                Text("Welcome to NavRhythm!")
+                    .font(.title)
+                    .foregroundColor(.black)
+                    .padding()
+               
+        
+            }
+
+
         }
-        .background(Color.green)
+        .edgesIgnoringSafeArea(.all)
     }
-}
+
+       
+    }
+
 
 struct PopUpIcon_Previews: PreviewProvider {
     static var previews: some View {

@@ -36,30 +36,33 @@ struct ContentView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(navigationAndHapticModel.startAddressString.isEmpty || navigationAndHapticModel.destinationAddressString.isEmpty)
+                    Spacer().frame(height: 10) 
                 }
             }
-            
-            Map(position: $navigationAndHapticModel.cameraPosition) {
-                if let route = navigationAndHapticModel.currentRoute {
-                    MapPolyline(route)
-                        .stroke(.blue, lineWidth: 5)
+            ZStack{
+                Map(position: $navigationAndHapticModel.cameraPosition) {
+                    if let route = navigationAndHapticModel.currentRoute {
+                        MapPolyline(route)
+                            .stroke(.blue, lineWidth: 5)
+                    }
                 }
-            }
-            .mapControls {
-                MapUserLocationButton()
-                MapPitchToggle()
-            }
-            .onAppear {
-                CLLocationManager().requestWhenInUseAuthorization()
-            }
-            .onReceive(timer) { _ in
-                if navigationAndHapticModel.isNavigating, let userLocation = locationManager.location {
-                    navigationAndHapticModel.userCoordinates = userLocation.coordinate
-                    print("USER COORDINATES UPDATED \(navigationAndHapticModel.userCoordinates)")
-                    navigationAndHapticModel.updateNavigation()
-                } else {
-                    print("LOCATION COULD NOT BE FOUND!")
+                .mapControls {
+                    MapUserLocationButton()
+                    MapPitchToggle()
                 }
+                .onAppear {
+                    CLLocationManager().requestWhenInUseAuthorization()
+                }
+                .onReceive(timer) { _ in
+                    if navigationAndHapticModel.isNavigating, let userLocation = locationManager.location {
+                        navigationAndHapticModel.userCoordinates = userLocation.coordinate
+                        print("USER COORDINATES UPDATED \(navigationAndHapticModel.userCoordinates)")
+                        navigationAndHapticModel.updateNavigation()
+                    } else {
+                        print("LOCATION COULD NOT BE FOUND!")
+                    }
+                }
+                VibrationView()
             }
         }
     }
