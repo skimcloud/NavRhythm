@@ -68,15 +68,10 @@
 			isa = PBXGroup;
 			children = (
 				4240C5652B87089F006E3FA3 /* NavRhythmPrototypeApp.swift */,
-				45D9FBC32BA12534002F1EE1 /* Popicon.swift */,
-				45A1390E2B925C5F001678D8 /* SearchBar.swift */,
-				45D9FBB92B9FE7E6002F1EE1 /* HapticFeedbackService.swift */,
 				45D9FBBB2B9FE7FD002F1EE1 /* NavigationUpdate.swift */,
-				45D9FBBD2B9FE7FF002F1EE1 /* NavigationAndHapticModel.swift */,
-				45D9FBBF2BA12256002F1EE1 /* Vibration.swift */,
-				45D9FBB42B9FE7DD002F1EE1 /* NavigationService.swift */,
-				45D9FBB72B9FE7E2002F1EE1 /* LocationService.swift */,
-				45D9FBB22B9FE7D0002F1EE1 /* ContentView.swift */,
+				426B6A4E2BA2798B009C1647 /* Models */,
+				426B6A4D2BA2796C009C1647 /* Services */,
+				426B6A4B2BA27928009C1647 /* Views */,
 				4240C5692B8708A3006E3FA3 /* Assets.xcassets */,
 				4240C56B2B8708A3006E3FA3 /* Preview Content */,
 			);
@@ -89,6 +84,35 @@
 				4240C56C2B8708A3006E3FA3 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		426B6A4B2BA27928009C1647 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				45D9FBB22B9FE7D0002F1EE1 /* ContentView.swift */,
+				45D9FBBF2BA12256002F1EE1 /* Vibration.swift */,
+				45D9FBC32BA12534002F1EE1 /* Popicon.swift */,
+				45A1390E2B925C5F001678D8 /* SearchBar.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		426B6A4D2BA2796C009C1647 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				45D9FBB72B9FE7E2002F1EE1 /* LocationService.swift */,
+				45D9FBB42B9FE7DD002F1EE1 /* NavigationService.swift */,
+				45D9FBB92B9FE7E6002F1EE1 /* HapticFeedbackService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		426B6A4E2BA2798B009C1647 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				45D9FBBD2B9FE7FF002F1EE1 /* NavigationAndHapticModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
